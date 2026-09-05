@@ -18,21 +18,31 @@ workflows:
           cd ..
       - name: Build iOS unsigned ipa via Payload
         script: |
-          flutter build ios --release --no-codesign
+          # 1. Bangun konfigurasi bawaan flutter tanpa memanggil kompilasi Xcode
+          flutter build ios --release --config-only
           
-          # Masuk ke folder hasil build
-          cd build/ios/iphoneos
+          # 2. Masuk ke direktori iOS
+          cd ios
           
-          # Buat struktur Payload
+          # 3. Paksa kompilasi Xcode secara manual dengan bypass mutlak
+          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -sdk iphoneos build CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO EXPANDED_CODE_SIGN_IDENTITY=""
+          
+          # 4. Masuk ke direktori hasil build xcodebuild
+          cd build/Release-iphoneos
+          
+          # 5. Buat struktur Payload
           mkdir -p Payload
           
-          # Pindahkan Runner.app ke dalam Payload
+          # 6. Pindahkan Runner.app ke dalam Payload
           mv Runner.app Payload/
           
-          # Zip struktur tersebut menjadi IPA dan pastikan posisinya bisa dibaca artifacts
-          zip -qr ../AndalanTools.ipa Payload
+          # 7. Pastikan folder target artifact flutter ada
+          mkdir -p ../../../build/ios
           
-          # Debug output untuk melihat di mana file ipa-nya berada
+          # 8. Zip struktur tersebut menjadi IPA dan letakkan di tempat yang dibaca Codemagic
+          zip -qr ../../../build/ios/AndalanTools.ipa Payload
+          
+          # Debug output
           cd ../../..
           ls -la build/ios/
     artifacts:
