@@ -10,9 +10,16 @@ workflows:
       - name: Install dependencies
         script: |
           flutter packages pub get
+      - name: Force Podfile generation and set platform
+        script: |
+          cd ios
+          pod init
+          sed -i '' 's/# platform :ios, '\''12.0\''/platform :ios, '\''15.5\''/g' Podfile
+          cd ..
       - name: Build iOS unsigned ipa
         script: |
           flutter build ipa --release --no-codesign
     artifacts:
       - build/ios/ipa/*.ipa
+
 
