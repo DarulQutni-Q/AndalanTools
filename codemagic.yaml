@@ -29,9 +29,13 @@ workflows:
           # Pindahkan Runner.app ke dalam Payload
           mv Runner.app Payload/
           
-          # Zip struktur tersebut menjadi IPA
+          # Zip struktur tersebut menjadi IPA dan pastikan posisinya bisa dibaca artifacts
           zip -qr ../AndalanTools.ipa Payload
+          
+          # Debug output untuk melihat di mana file ipa-nya berada
+          cd ../../..
+          ls -la build/ios/
     artifacts:
-      - build/ios/*.ipa
+      - build/ios/AndalanTools.ipa
 
 
