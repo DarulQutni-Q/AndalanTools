@@ -1,0 +1,35 @@
+name: andalan_tools
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  file_selector: ^1.0.3
+  flutter:
+    sdk: flutter
+  flutter_doc_scanner: ^0.0.21
+  flutter_image_compress: ^2.5.1
+  flutter_riverpod: ^2.6.1
+  google_mlkit_text_recognition: ^0.15.0
+  image: ^4.1.0
+  image_cropper: ^10.0.0+1
+  image_picker: ^1.1.2
+  open_filex: ^4.7.0
+  path_provider: ^2.1.5
+  pdf_combiner: ^6.0.4
+  share_plus: ^12.0.2
+  syncfusion_flutter_pdf: ^29.1.38
+  syncfusion_flutter_pdfviewer: ^29.1.38
+  docx_to_text: any
+  pdf: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
