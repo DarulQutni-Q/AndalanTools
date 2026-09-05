@@ -8,18 +8,19 @@
 .buildlog/
 .history
 .svn/
-migrate_working_dir/
-
-# IntelliJ related
+macOS/
+DerivedData/
+.profile.d/
+.project
+.settings/
 *.iml
 *.ipr
-*.iws
-.idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# IDEs
+.idea/
+.vscode/
+out/
+.idea_modules/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -30,6 +31,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols
@@ -37,7 +39,54 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# Android related
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties
+*.jks
+*.keystore
+
+# iOS/XCode related
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*project.xcworkspace
+**/ios/.generated/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS
+**/macos/Flutter/ephemeral/
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Windows
+**/windows/flutter/ephemeral/
+**/windows/flutter/generated_plugin_registrant.cc
+
+# Linux
+**/linux/flutter/ephemeral/
+**/linux/flutter/generated_plugin_registrant.cc
+
+# Web
+**/web/flutter_bootstrap.js
+
+# Coverage
+coverage/
+
+# Exceptions to above rules
+!**/ios/**/*.xcworkspace
