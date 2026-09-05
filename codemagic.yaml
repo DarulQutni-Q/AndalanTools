@@ -19,10 +19,18 @@ workflows:
       - name: Build iOS unsigned ipa via Payload
         script: |
           flutter build ios --release --no-codesign
-          mkdir -p build/ios/Payload
-          mv build/ios/iphoneos/Runner.app build/ios/Payload/
-          cd build/ios
-          zip -qr AndalanTools.ipa Payload
+          
+          # Masuk ke folder hasil build
+          cd build/ios/iphoneos
+          
+          # Buat struktur Payload
+          mkdir -p Payload
+          
+          # Pindahkan Runner.app ke dalam Payload
+          mv Runner.app Payload/
+          
+          # Zip struktur tersebut menjadi IPA
+          zip -qr ../AndalanTools.ipa Payload
     artifacts:
       - build/ios/*.ipa
 
