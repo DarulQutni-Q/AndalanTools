@@ -33,7 +33,7 @@ jobs:
 
       - name: Build iOS Simulator Bundle
         run: |
-          flutter build ios --simulator --no-codesign
+          flutter build ios --simulator
           cd build/ios/iphonesimulator
           zip -r -q ../../../AndalanTools-simulator.zip Runner.app
           cd ../../..

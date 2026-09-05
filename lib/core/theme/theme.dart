@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class AppTheme {
   // Warm Monochrome & Muted Pastels Palette
@@ -25,7 +26,6 @@ class AppTheme {
         primary: primaryText,
         secondary: secondaryText,
         surface: surfaceColor,
-        background: canvasColor,
         error: warningText,
       ),
       dividerColor: dividerColor,
@@ -68,7 +68,7 @@ class AppTheme {
           splashFactory: NoSplash.splashFactory,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: surfaceColor,
         elevation: 0,
         shape: RoundedRectangleBorder(
