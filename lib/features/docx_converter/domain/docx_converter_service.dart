@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:docx_to_text/docx_to_text.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -44,7 +45,7 @@ class DocxConverterService {
 
       return outputPath;
     } catch (e) {
-      print("Error converting Docx to PDF: \$e");
+      debugPrint("Error converting Docx to PDF: $e");
       return null;
     }
   }

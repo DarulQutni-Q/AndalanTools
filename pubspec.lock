@@ -137,14 +137,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
-  file_magic_number:
-    dependency: transitive
-    description:
-      name: file_magic_number
-      sha256: cd0ec23eb2511206152baa87edb90b4862dc1690b1fbe5ebcf06654d3ee3112b
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.2"
   file_selector:
     dependency: "direct main"
     description:
@@ -592,14 +584,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.11.3"
-  pdf_combiner:
-    dependency: "direct main"
-    description:
-      name: pdf_combiner
-      sha256: ef5edcbbf3facff34d05f5841b64653697cf3a69cfdcb9015a97b86e98b63eca
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.4"
   petitparser:
     dependency: transitive
     description:

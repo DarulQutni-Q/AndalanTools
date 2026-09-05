@@ -12,7 +12,7 @@ import 'package:andalan_tools/core/utils/pdf_generation_service.dart';
 import '../providers/image_list_provider.dart';
 
 class MainCanvasScreen extends ConsumerWidget {
-  const MainCanvasScreen({Key? key}) : super(key: key);
+  const MainCanvasScreen({super.key});
 
   Future<void> _pickImages(WidgetRef ref) async {
     final picker = ImagePicker();
@@ -22,15 +22,11 @@ class MainCanvasScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _scanDocument(WidgetRef ref) async {
+  Future<void> _scanDocument(BuildContext context, WidgetRef ref) async {
     try {
-      // Use flutter_doc_scanner
-      // Note: check the API for flutter_doc_scanner 0.0.21
-      // Generally returns list of paths or single path
       dynamic scannedDocs = await FlutterDocScanner().getScanDocuments();
       
       if (scannedDocs != null) {
-        // Ensure we handle it as a List of strings or whatever it returns
         List<String> paths = [];
         if (scannedDocs is String) {
           paths = [scannedDocs];
@@ -39,11 +35,28 @@ class MainCanvasScreen extends ConsumerWidget {
         }
         
         if (paths.isNotEmpty) {
-           ref.read(imageListProvider.notifier).addImages(paths);
+          ref.read(imageListProvider.notifier).addImages(paths);
+          return;
         }
       }
-    } catch (e) {
-      print("Scan Error: $e");
+    } catch (_) {
+      // Document scanner unavailable (e.g. simulator or camera restricted).
+      // Provide seamless fallback to standard camera photo capture.
+      if (context.mounted) {
+        final picker = ImagePicker();
+        try {
+          final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+          if (photo != null) {
+            ref.read(imageListProvider.notifier).addImages([photo.path]);
+          }
+        } catch (err) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Kamera tidak tersedia atau izin belum diberikan.')),
+            );
+          }
+        }
+      }
     }
   }
 
@@ -92,7 +105,7 @@ class MainCanvasScreen extends ConsumerWidget {
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to generate PDF')),
+          const SnackBar(content: Text('Gagal membuat PDF. Coba kembali.')),
         );
       }
     }
@@ -102,27 +115,39 @@ class MainCanvasScreen extends ConsumerWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
+      builder: (dialogCtx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: const Text('Success'),
         content: const Text('PDF generated successfully.'),
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Share.shareXFiles([XFile(path)], text: 'Shared from Andalan Tools');
-            },
-            child: const Text('Share'),
+          Builder(
+            builder: (btnCtx) => TextButton(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                final box = btnCtx.findRenderObject() as RenderBox?;
+                final origin = box != null
+                    ? box.localToGlobal(Offset.zero) & box.size
+                    : Rect.fromLTWH(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height / 2);
+                SharePlus.instance.share(
+                  ShareParams(
+                    files: [XFile(path)],
+                    subject: 'PDF from Andalan Tools',
+                    sharePositionOrigin: origin,
+                  ),
+                );
+              },
+              child: const Text('Share'),
+            ),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(dialogCtx);
               OpenFilex.open(path);
             },
             child: const Text('Open'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogCtx),
             child: const Text('Close'),
           ),
         ],
@@ -145,7 +170,7 @@ class MainCanvasScreen extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.document_scanner_outlined),
-            onPressed: () => _scanDocument(ref),
+            onPressed: () => _scanDocument(context, ref),
           ),
         ],
       ),

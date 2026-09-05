@@ -10,7 +10,7 @@ import 'package:andalan_tools/core/theme/theme.dart';
 import '../providers/pdf_editor_provider.dart';
 
 class PdfEditorScreen extends ConsumerStatefulWidget {
-  const PdfEditorScreen({Key? key}) : super(key: key);
+  const PdfEditorScreen({super.key});
 
   @override
   ConsumerState<PdfEditorScreen> createState() => _PdfEditorScreenState();
@@ -23,6 +23,8 @@ class _PdfEditorScreenState extends ConsumerState<PdfEditorScreen> {
     const XTypeGroup typeGroup = XTypeGroup(
       label: 'PDFs',
       extensions: <String>['pdf'],
+      mimeTypes: <String>['application/pdf'],
+      uniformTypeIdentifiers: <String>['com.adobe.pdf'],
     );
     
     final XFile? file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
@@ -108,7 +110,7 @@ class _PdfEditorScreenState extends ConsumerState<PdfEditorScreen> {
                         color: AppTheme.activeBg,
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Text(
+                      child: const Text(
                         '\${state.selectedPages.length} selected',
                         style: TextStyle(color: AppTheme.activeText, fontSize: 12, fontWeight: FontWeight.bold),
                       ),
@@ -201,11 +203,13 @@ class _PdfEditorScreenState extends ConsumerState<PdfEditorScreen> {
                       const SnackBar(content: Text('Select pages to delete first.')),
                     );
                   } : () async {
-                     await ref.read(pdfEditorProvider.notifier).deleteSelectedPages();
-                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Pages deleted.')),
-                    );
-                  },
+                      await ref.read(pdfEditorProvider.notifier).deleteSelectedPages();
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Pages deleted.')),
+                        );
+                      }
+                    },
                 ),
               ],
             ),
@@ -250,20 +254,32 @@ class _PdfEditorScreenState extends ConsumerState<PdfEditorScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
+      builder: (dialogCtx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: Text(title),
-        content: Text('Saved to: \$path'),
+        content: Text('Saved to: $path'),
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Share.shareXFiles([XFile(path)], text: 'Shared from Andalan Tools');
-            },
-            child: const Text('Share'),
+          Builder(
+            builder: (btnCtx) => TextButton(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                final box = btnCtx.findRenderObject() as RenderBox?;
+                final origin = box != null
+                    ? box.localToGlobal(Offset.zero) & box.size
+                    : Rect.fromLTWH(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height / 2);
+                SharePlus.instance.share(
+                  ShareParams(
+                    files: [XFile(path)],
+                    subject: 'Shared from Andalan Tools',
+                    sharePositionOrigin: origin,
+                  ),
+                );
+              },
+              child: const Text('Share'),
+            ),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogCtx),
             child: const Text('Close'),
           ),
         ],

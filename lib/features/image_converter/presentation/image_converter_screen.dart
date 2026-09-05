@@ -11,12 +11,14 @@ import '../providers/image_converter_provider.dart';
 import 'package:andalan_tools/core/utils/image_processor.dart';
 
 class ImageConverterScreen extends ConsumerWidget {
-  const ImageConverterScreen({Key? key}) : super(key: key);
+  const ImageConverterScreen({super.key});
 
   Future<void> _pickImages(WidgetRef ref) async {
     const XTypeGroup typeGroup = XTypeGroup(
       label: 'Images',
       extensions: <String>['jpg', 'jpeg', 'png', 'webp', 'heic', 'heif'],
+      mimeTypes: <String>['image/*'],
+      uniformTypeIdentifiers: <String>['public.image'],
     );
     
     final List<XFile> files = await openFiles(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
@@ -103,7 +105,7 @@ class ImageConverterScreen extends ConsumerWidget {
                                               color: AppTheme.successBg,
                                               borderRadius: BorderRadius.circular(4),
                                             ),
-                                            child: Text(
+                                            child: const Text(
                                               'Converted',
                                               style: TextStyle(
                                                 color: AppTheme.successText,
@@ -199,18 +201,27 @@ class ImageConverterScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: canConvert
-                    ? () => ref.read(imageConverterProvider.notifier).convertImages()
-                    : (canShare
-                        ? () {
-                            Share.shareXFiles(
-                              state.convertedPaths.map((p) => XFile(p)).toList(),
-                              text: 'Converted Images',
-                            );
-                          }
-                        : null),
-                child: Text(canShare ? 'Share Converted Images' : 'Convert Images'),
+              child: Builder(
+                builder: (btnCtx) => ElevatedButton(
+                  onPressed: canConvert
+                      ? () => ref.read(imageConverterProvider.notifier).convertImages()
+                      : (canShare
+                          ? () {
+                              final box = btnCtx.findRenderObject() as RenderBox?;
+                              final origin = box != null
+                                  ? box.localToGlobal(Offset.zero) & box.size
+                                  : Rect.fromLTWH(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height / 2);
+                              SharePlus.instance.share(
+                                ShareParams(
+                                  files: state.convertedPaths.map((p) => XFile(p)).toList(),
+                                  subject: 'Converted Images',
+                                  sharePositionOrigin: origin,
+                                ),
+                              );
+                            }
+                          : null),
+                  child: Text(canShare ? 'Share Converted Images' : 'Convert Images'),
+                ),
               ),
             ),
           ],

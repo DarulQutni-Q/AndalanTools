@@ -4,9 +4,11 @@ import 'package:andalan_tools/features/image_to_pdf/presentation/main_canvas_scr
 import 'package:andalan_tools/features/pdf_editor/presentation/pdf_editor_screen.dart';
 import 'package:andalan_tools/features/image_converter/presentation/image_converter_screen.dart';
 import 'package:andalan_tools/features/docx_converter/presentation/docx_converter_screen.dart';
+import 'package:andalan_tools/features/pdf_merger/presentation/pdf_merger_screen.dart';
+import 'package:andalan_tools/features/pdf_lock/presentation/pdf_lock_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,32 @@ class HomeScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const MainCanvasScreen()),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            _buildToolCard(
+              context,
+              title: 'PDF Merger',
+              subtitle: 'Gabungkan 2 atau lebih dokumen PDF menjadi satu file utuh.',
+              icon: Icons.call_merge_outlined,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PdfMergerScreen()),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            _buildToolCard(
+              context,
+              title: 'Lock & Protect PDF',
+              subtitle: 'Enkripsi dan amankan file PDF dengan kata sandi AES 256-bit.',
+              icon: Icons.lock_outline,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PdfLockScreen()),
                 );
               },
             ),

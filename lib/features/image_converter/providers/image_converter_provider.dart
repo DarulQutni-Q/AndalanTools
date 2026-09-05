@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:andalan_tools/core/utils/image_processor.dart';
@@ -67,7 +68,7 @@ class ImageConverterNotifier extends StateNotifier<ImageConverterState> {
           results.add(convertedPath);
         }
       } catch (e) {
-        print("Conversion failed for \$originalPath: \$e");
+        debugPrint("Conversion failed for $originalPath: $e");
       }
     }
 

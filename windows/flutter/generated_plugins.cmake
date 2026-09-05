@@ -5,7 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
   flutter_doc_scanner
-  pdf_combiner
   share_plus
   syncfusion_pdfviewer_windows
   url_launcher_windows

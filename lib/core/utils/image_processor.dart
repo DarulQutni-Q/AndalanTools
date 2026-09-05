@@ -6,16 +6,20 @@ enum TargetImageFormat { png, jpg, webp, heic }
 class ImageProcessor {
   /// Compresses an image for PDF generation.
   static Future<String?> compressForPdf(String originalPath, int quality) async {
-    final targetPath = await FileService.generateTempPath('.jpg');
-    
-    final XFile? compressedFile = await FlutterImageCompress.compressAndGetFile(
-      originalPath,
-      targetPath,
-      quality: quality,
-      format: CompressFormat.jpeg,
-    );
+    try {
+      final targetPath = await FileService.generateTempPath('.jpg');
+      
+      final XFile? compressedFile = await FlutterImageCompress.compressAndGetFile(
+        originalPath,
+        targetPath,
+        quality: quality,
+        format: CompressFormat.jpeg,
+      );
 
-    return compressedFile?.path ?? originalPath; // fallback to original if compression fails
+      return compressedFile?.path ?? originalPath;
+    } catch (_) {
+      return originalPath; // fallback to original if compression fails
+    }
   }
 
   /// Converts an image to the specified target format.

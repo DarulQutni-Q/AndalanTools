@@ -7,7 +7,7 @@ class FileService {
   static Future<String> generateTempPath(String extension) async {
     final tempDir = await getTemporaryDirectory();
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    return '${tempDir.path}/andalan_${timestamp}${extension}';
+    return '${tempDir.path}/andalan_$timestamp$extension';
   }
 
   /// Writes bytes to the specified path.

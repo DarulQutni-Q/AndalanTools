@@ -45,5 +45,15 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Andalan Tools membutuhkan akses kamera untuk memindai dokumen dan mengambil foto.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Andalan Tools membutuhkan akses galeri foto untuk memilih gambar yang akan dikonversi.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Andalan Tools membutuhkan izin untuk menyimpan hasil konversi gambar ke galeri foto.</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 </dict>
 </plist>

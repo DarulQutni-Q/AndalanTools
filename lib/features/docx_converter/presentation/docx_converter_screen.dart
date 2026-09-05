@@ -9,12 +9,20 @@ import 'package:andalan_tools/core/theme/theme.dart';
 import '../providers/docx_converter_provider.dart';
 
 class DocxConverterScreen extends ConsumerWidget {
-  const DocxConverterScreen({Key? key}) : super(key: key);
+  const DocxConverterScreen({super.key});
 
   Future<void> _pickFile(WidgetRef ref) async {
     const XTypeGroup typeGroup = XTypeGroup(
       label: 'Word Documents',
       extensions: <String>['docx'],
+      mimeTypes: <String>[
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/msword'
+      ],
+      uniformTypeIdentifiers: <String>[
+        'org.openxmlformats.wordprocessingml.document',
+        'com.microsoft.word.doc'
+      ],
     );
     
     final XFile? file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
@@ -32,7 +40,7 @@ class DocxConverterScreen extends ConsumerWidget {
     ref.listen<DocxConverterState>(docxConverterProvider, (previous, next) {
       if (next.error != null && next.error != previous?.error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: \${next.error}')),
+          const SnackBar(content: Text('Error: \${next.error}')),
         );
       }
       
@@ -158,27 +166,39 @@ class DocxConverterScreen extends ConsumerWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
+      builder: (dialogCtx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: const Text('Conversion Successful'),
         content: const Text('Docx text has been converted to PDF.'),
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Share.shareXFiles([XFile(path)], text: 'Shared from Andalan Tools');
-            },
-            child: const Text('Share'),
+          Builder(
+            builder: (btnCtx) => TextButton(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                final box = btnCtx.findRenderObject() as RenderBox?;
+                final origin = box != null
+                    ? box.localToGlobal(Offset.zero) & box.size
+                    : Rect.fromLTWH(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height / 2);
+                SharePlus.instance.share(
+                  ShareParams(
+                    files: [XFile(path)],
+                    subject: 'Shared from Andalan Tools',
+                    sharePositionOrigin: origin,
+                  ),
+                );
+              },
+              child: const Text('Share'),
+            ),
           ),
           TextButton(
             onPressed: () {
-               Navigator.pop(context);
+               Navigator.pop(dialogCtx);
                OpenFilex.open(path);
             },
             child: const Text('Open'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogCtx),
             child: const Text('Close'),
           ),
         ],
