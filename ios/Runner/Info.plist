@@ -55,5 +55,7 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Andalan Tools membutuhkan Face ID untuk mengamankan dan membuka Brankas Dokumen privat Anda.</string>
 </dict>
 </plist>

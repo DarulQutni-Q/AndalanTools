@@ -10,6 +10,9 @@ import 'package:andalan_tools/features/pdf_lock/domain/pdf_lock_service.dart';
 import 'package:andalan_tools/core/utils/file_service.dart';
 import 'package:andalan_tools/core/utils/pdf_generation_service.dart';
 import 'package:andalan_tools/features/image_to_pdf/providers/image_list_provider.dart';
+import 'package:andalan_tools/features/compress_and_clean/domain/pdf_compressor_service.dart';
+import 'package:andalan_tools/features/compress_and_clean/domain/exif_cleaner_service.dart';
+import 'package:andalan_tools/features/vault/domain/vault_service.dart';
 import 'package:image/image.dart' as img;
 
 class MockPathProviderPlatform extends Fake
@@ -162,4 +165,86 @@ void main() {
       await File(pdfPath).delete();
     });
   });
+
+  group('PdfCompressorService Tests', () {
+    test('compressPdf creates compressed PDF and calculates metrics', () async {
+      final doc = PdfDocument();
+      doc.pages.add().graphics.drawString('Test Compression Content', PdfStandardFont(PdfFontFamily.helvetica, 14));
+      final inputPath = await FileService.generateTempPath('.pdf');
+      await File(inputPath).writeAsBytes(doc.saveSync());
+      doc.dispose();
+
+      final result = await PdfCompressorService.compressPdf(
+        inputPath: inputPath,
+        level: CompressionLevel.balanced,
+      );
+
+      expect(result, isNotNull);
+      expect(result!.originalSizeBytes, greaterThan(0));
+      expect(result.compressedSizeBytes, greaterThan(0));
+      expect(await File(result.outputPath).exists(), isTrue);
+
+      // Cleanup
+      await File(inputPath).delete();
+      await File(result.outputPath).delete();
+    });
+  });
+
+  group('ExifCleanerService Tests', () {
+    test('inspectImage and cleanExif removes metadata and writes valid image', () async {
+      final testImg = img.Image(width: 50, height: 50);
+      img.fill(testImg, color: img.ColorRgb8(0, 255, 0));
+      final jpgBytes = img.encodeJpg(testImg);
+
+      final imgPath = await FileService.generateTempPath('.jpg');
+      await File(imgPath).writeAsBytes(jpgBytes);
+
+      final report = await ExifCleanerService.inspectImage(imgPath);
+      expect(report, isNotNull);
+
+      final cleanPath = await ExifCleanerService.cleanExif(imgPath);
+      expect(cleanPath, isNotNull);
+      expect(await File(cleanPath!).exists(), isTrue);
+
+      // Cleanup
+      await File(imgPath).delete();
+      await File(cleanPath).delete();
+    });
+  });
+
+  group('VaultService Tests', () {
+    test('saveToVault, getVaultItems, and deleteItem operate properly', () async {
+      final samplePath = await FileService.generateTempPath('.txt');
+      await File(samplePath).writeAsString('Vault Secret Content');
+
+      final saved = await VaultService.saveToVault(
+        sourcePath: samplePath,
+        name: 'secret_document.txt',
+        type: 'text',
+      );
+
+      expect(saved, isNotNull);
+      expect(saved!.name, equals('secret_document.txt'));
+
+      final items = await VaultService.getVaultItems();
+      expect(items.any((i) => i.path == saved.path), isTrue);
+
+      // Test settings toggle
+      await VaultService.setBiometricEnabled(true);
+      expect(await VaultService.isBiometricEnabled(), isTrue);
+      await VaultService.setBiometricEnabled(false);
+      expect(await VaultService.isBiometricEnabled(), isFalse);
+
+      // Test delete
+      final deleted = await VaultService.deleteItem(saved.path);
+      expect(deleted, isTrue);
+
+      final itemsAfter = await VaultService.getVaultItems();
+      expect(itemsAfter.any((i) => i.path == saved.path), isFalse);
+
+      // Cleanup
+      if (await File(samplePath).exists()) await File(samplePath).delete();
+    });
+  });
 }
+

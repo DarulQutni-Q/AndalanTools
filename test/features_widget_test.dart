@@ -1,14 +1,36 @@
+// ignore_for_file: depend_on_referenced_packages
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:andalan_tools/core/theme/theme.dart';
 import 'package:andalan_tools/features/pdf_merger/presentation/pdf_merger_screen.dart';
 import 'package:andalan_tools/features/pdf_lock/presentation/pdf_lock_screen.dart';
 import 'package:andalan_tools/features/docx_converter/presentation/docx_converter_screen.dart';
 import 'package:andalan_tools/features/image_converter/presentation/image_converter_screen.dart';
+import 'package:andalan_tools/features/compress_and_clean/presentation/compress_and_clean_screen.dart';
+import 'package:andalan_tools/features/vault/presentation/vault_screen.dart';
+
+class MockPathProviderPlatform extends Fake
+    with MockPlatformInterfaceMixin
+    implements PathProviderPlatform {
+  @override
+  Future<String?> getTemporaryPath() async {
+    return Directory.systemTemp.path;
+  }
+
+  @override
+  Future<String?> getApplicationDocumentsPath() async {
+    return Directory.systemTemp.path;
+  }
+}
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  PathProviderPlatform.instance = MockPathProviderPlatform();
 
   testWidgets('PdfMergerScreen renders initial UI components correctly', (WidgetTester tester) async {
     await tester.pumpWidget(
@@ -93,4 +115,47 @@ void main() {
     expect(find.text('Galeri Foto (Photos)'), findsOneWidget);
     expect(find.text('File Manager (Files)'), findsOneWidget);
   });
+
+  testWidgets('CompressAndCleanScreen renders segmented controls and switches tabs', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.lightTheme,
+        home: const CompressAndCleanScreen(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Kompres & Bersih EXIF'), findsOneWidget);
+    expect(find.text('Kompresi PDF'), findsOneWidget);
+    expect(find.text('Bersihkan EXIF'), findsOneWidget);
+    expect(find.text('Pilih Berkas PDF'), findsOneWidget);
+
+    // Switch to Bersihkan EXIF tab
+    await tester.tap(find.text('Bersihkan EXIF'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Pilih Foto dari Galeri'), findsOneWidget);
+    expect(find.text('Pilih dari File Manager'), findsOneWidget);
+  });
+
+  testWidgets('VaultScreen renders initial UI components properly', (WidgetTester tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: const VaultScreen(),
+        ),
+      );
+      await Future.delayed(const Duration(milliseconds: 200));
+    });
+    await tester.pump();
+
+    expect(find.text('Brankas & Riwayat'), findsOneWidget);
+    expect(find.text('Brankas Masih Kosong'), findsOneWidget);
+    expect(find.text('Semua'), findsOneWidget);
+    expect(find.text('PDF'), findsOneWidget);
+    expect(find.text('Gambar'), findsOneWidget);
+    expect(find.text('Word'), findsOneWidget);
+  });
 }
+

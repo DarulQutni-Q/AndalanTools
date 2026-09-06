@@ -6,6 +6,7 @@ import 'package:open_filex/open_filex.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:andalan_tools/core/theme/theme.dart';
+import 'package:andalan_tools/features/vault/domain/vault_service.dart';
 import '../providers/docx_converter_provider.dart';
 
 class DocxConverterScreen extends ConsumerWidget {
@@ -76,21 +77,21 @@ class DocxConverterScreen extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: AppTheme.warningBg,
+                          color: AppTheme.successBg,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppTheme.warningText.withOpacity(0.2)),
+                          border: Border.all(color: AppTheme.successText.withOpacity(0.2)),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Icon(Icons.info_outline, color: AppTheme.warningText, size: 20),
+                            const Icon(Icons.auto_awesome, color: AppTheme.successText, size: 20),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                'Note: This MVP extracts the text from the Docx and writes it to a new PDF. '
-                                'Complex formatting, images, and exotic layouts will not be preserved 100%.',
+                                'Format Baru: Mendukung ekstraksi gambar inline, tabel dokumen, dan '
+                                'struktur heading langsung ke format PDF standar.',
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: AppTheme.warningText,
+                                  color: AppTheme.successText,
                                 ),
                               ),
                             ),
@@ -187,6 +188,22 @@ class DocxConverterScreen extends ConsumerWidget {
                OpenFilex.open(path);
             },
             child: const Text('Open'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final fileName = path.split('/').last;
+              await VaultService.saveToVault(
+                sourcePath: path,
+                name: fileName,
+                type: 'pdf',
+              );
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Berhasil disimpan ke Brankas!')),
+                );
+              }
+            },
+            child: const Text('Ke Brankas'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(dialogCtx),
