@@ -86,8 +86,8 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Android Release APK
-        run: flutter build apk --release --android-skip-build-dependency-validation
+      - name: Build Android Release APK (Phone arm64)
+        run: flutter build apk --release --target-platform android-arm64 --android-skip-build-dependency-validation
 
       - name: Prepare APK Artifact
         run: |
