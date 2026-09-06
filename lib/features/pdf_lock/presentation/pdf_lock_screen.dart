@@ -1,6 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:file_selector/file_selector.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -33,26 +32,25 @@ class _PdfLockScreenState extends State<PdfLockScreen> {
   }
 
   Future<void> _pickPdf() async {
-    const XTypeGroup typeGroup = XTypeGroup(
-      label: 'PDFs',
-      extensions: <String>['pdf'],
-      mimeTypes: <String>['application/pdf'],
-      uniformTypeIdentifiers: <String>['com.adobe.pdf'],
-    );
+    try {
+      final FilePickerResult? result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        allowMultiple: false,
+      );
 
-    final XFile? file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
-    if (file != null) {
-      final f = File(file.path);
-      int size = 0;
-      try {
-        size = await f.length();
-      } catch (_) {}
-
-      setState(() {
-        _selectedPdfPath = file.path;
-        _selectedPdfName = file.name.isNotEmpty ? file.name : file.path.split('/').last;
-        _fileSizeBytes = size;
-      });
+      if (result != null && result.files.isNotEmpty && result.files.single.path != null) {
+        final platformFile = result.files.single;
+        setState(() {
+          _selectedPdfPath = platformFile.path!;
+          _selectedPdfName = platformFile.name.isNotEmpty
+              ? platformFile.name
+              : platformFile.path!.split('/').last;
+          _fileSizeBytes = platformFile.size;
+        });
+      }
+    } catch (e) {
+      debugPrint("Error picking PDF: $e");
     }
   }
 

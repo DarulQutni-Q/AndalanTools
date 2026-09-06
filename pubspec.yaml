@@ -24,6 +24,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^29.1.38
   docx_to_text: any
   pdf: any
+  file_picker: ^11.0.3
 
 dev_dependencies:
   flutter_test:

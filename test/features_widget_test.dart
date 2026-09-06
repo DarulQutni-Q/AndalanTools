@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:andalan_tools/core/theme/theme.dart';
 import 'package:andalan_tools/features/pdf_merger/presentation/pdf_merger_screen.dart';
 import 'package:andalan_tools/features/pdf_lock/presentation/pdf_lock_screen.dart';
+import 'package:andalan_tools/features/docx_converter/presentation/docx_converter_screen.dart';
+import 'package:andalan_tools/features/image_converter/presentation/image_converter_screen.dart';
 
 void main() {
+
   testWidgets('PdfMergerScreen renders initial UI components correctly', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
@@ -36,5 +40,57 @@ void main() {
     expect(find.text('Enkripsi PDF dengan kata sandi (AES-256).\nSemua proses berlangsung 100% offline.'), findsOneWidget);
     expect(find.text('Pilih File PDF'), findsOneWidget);
     expect(find.byIcon(Icons.lock_outline), findsOneWidget);
+  });
+
+  testWidgets('DocxConverterScreen renders initial UI with pick button', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: const DocxConverterScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Docx to PDF'), findsOneWidget);
+    expect(find.text('Select Docx File'), findsOneWidget);
+  });
+
+  testWidgets('ImageConverterScreen renders empty state with Photos gallery and File manager buttons', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: const ImageConverterScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Format Converter'), findsOneWidget);
+    expect(find.text('Belum Ada Gambar Dipilih'), findsOneWidget);
+    expect(find.text('Buka Galeri Foto'), findsOneWidget);
+    expect(find.text('Buka File Manager'), findsOneWidget);
+    expect(find.byIcon(Icons.add_photo_alternate_outlined), findsOneWidget);
+  });
+
+  testWidgets('ImageConverterScreen tap + icon opens source modal', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: const ImageConverterScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.add_photo_alternate_outlined));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Pilih Sumber Gambar'), findsOneWidget);
+    expect(find.text('Galeri Foto (Photos)'), findsOneWidget);
+    expect(find.text('File Manager (Files)'), findsOneWidget);
   });
 }

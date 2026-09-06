@@ -1,6 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:file_selector/file_selector.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -31,32 +30,35 @@ class _PdfMergerScreenState extends State<PdfMergerScreen> {
   bool _isProcessing = false;
 
   Future<void> _pickPdfs() async {
-    const XTypeGroup typeGroup = XTypeGroup(
-      label: 'PDFs',
-      extensions: <String>['pdf'],
-      mimeTypes: <String>['application/pdf'],
-      uniformTypeIdentifiers: <String>['com.adobe.pdf'],
-    );
+    try {
+      final FilePickerResult? result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        allowMultiple: true,
+      );
 
-    final List<XFile> files = await openFiles(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
-    if (files.isNotEmpty) {
-      for (final file in files) {
-        final f = File(file.path);
-        int size = 0;
-        try {
-          size = await f.length();
-        } catch (_) {}
+      if (result != null && result.files.isNotEmpty) {
+        for (final platformFile in result.files) {
+          if (platformFile.path == null) continue;
+          final filePath = platformFile.path!;
+          final fileName = platformFile.name;
+          final fileSize = platformFile.size;
 
-        setState(() {
-          _pdfList.add(
-            PdfItem(
-              path: file.path,
-              name: file.name.isNotEmpty ? file.name : file.path.split('/').last,
-              sizeInBytes: size,
-            ),
-          );
-        });
+          if (!_pdfList.any((item) => item.path == filePath)) {
+            setState(() {
+              _pdfList.add(
+                PdfItem(
+                  path: filePath,
+                  name: fileName.isNotEmpty ? fileName : filePath.split('/').last,
+                  sizeInBytes: fileSize,
+                ),
+              );
+            });
+          }
+        }
       }
+    } catch (e) {
+      debugPrint("Error picking PDFs: $e");
     }
   }
 

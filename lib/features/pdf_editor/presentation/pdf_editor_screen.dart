@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'dart:io';
 import 'package:share_plus/share_plus.dart';
-import 'package:file_selector/file_selector.dart';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:andalan_tools/core/theme/theme.dart';
 import '../providers/pdf_editor_provider.dart';
@@ -20,17 +20,18 @@ class _PdfEditorScreenState extends ConsumerState<PdfEditorScreen> {
   final PdfViewerController _pdfViewerController = PdfViewerController();
 
   Future<void> _pickFile(WidgetRef ref) async {
-    const XTypeGroup typeGroup = XTypeGroup(
-      label: 'PDFs',
-      extensions: <String>['pdf'],
-      mimeTypes: <String>['application/pdf'],
-      uniformTypeIdentifiers: <String>['com.adobe.pdf'],
-    );
-    
-    final XFile? file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
-    
-    if (file != null) {
-      ref.read(pdfEditorProvider.notifier).loadPdfDetails(file.path);
+    try {
+      final FilePickerResult? result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        allowMultiple: false,
+      );
+      
+      if (result != null && result.files.isNotEmpty && result.files.single.path != null) {
+        ref.read(pdfEditorProvider.notifier).loadPdfDetails(result.files.single.path!);
+      }
+    } catch (e) {
+      debugPrint("Error picking PDF: $e");
     }
   }
 

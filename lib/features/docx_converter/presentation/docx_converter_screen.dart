@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:share_plus/share_plus.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:file_selector/file_selector.dart';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:andalan_tools/core/theme/theme.dart';
 import '../providers/docx_converter_provider.dart';
@@ -12,23 +12,14 @@ class DocxConverterScreen extends ConsumerWidget {
   const DocxConverterScreen({super.key});
 
   Future<void> _pickFile(WidgetRef ref) async {
-    const XTypeGroup typeGroup = XTypeGroup(
-      label: 'Word Documents',
-      extensions: <String>['docx'],
-      mimeTypes: <String>[
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/msword'
-      ],
-      uniformTypeIdentifiers: <String>[
-        'org.openxmlformats.wordprocessingml.document',
-        'com.microsoft.word.doc'
-      ],
+    final result = await FilePicker.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['docx', 'doc'],
+      allowMultiple: false,
     );
     
-    final XFile? file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
-    
-    if (file != null) {
-      ref.read(docxConverterProvider.notifier).setInputFile(file.path);
+    if (result != null && result.files.isNotEmpty && result.files.single.path != null) {
+      ref.read(docxConverterProvider.notifier).setInputFile(result.files.single.path!);
     }
   }
 
