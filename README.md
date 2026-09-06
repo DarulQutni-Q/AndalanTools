@@ -65,12 +65,10 @@ Aplikasi menyediakan tujuh alat pemrosesan dokumen inti dan satu brankas berkas 
 
 ## Instalasi & Pemasangan
 
-### Metode 1: Pasang Berkas IPA Siap Pakai (Rekomendasi)
-1. Unduh berkas `AndalanTools.ipa` dari tab Releases di repositori ini.
-2. Pasang ke iPhone menggunakan salah satu alat sideloading:
-   - SideStore: Paling fleksibel, mendukung perpanjangan sertifikat via Wi-Fi/VPN lokal tanpa kabel ke komputer.
-   - AltStore atau Sideloadly: Melalui komputer Windows, macOS, atau Linux.
-   - TrollStore: Untuk perangkat iOS yang mendukung instalasi tanpa batasan masa berlaku 7 hari.
+### Metode 1: Pasang Berkas Siap Pakai (Rekomendasi)
+Unduh berkas instalasi dari tab Releases di repositori ini:
+- Untuk iPhone (iOS): Unduh `AndalanTools.ipa` dan pasang menggunakan SideStore (rekomendasi tanpa kabel via Wi-Fi/VPN), AltStore, Sideloadly, atau TrollStore.
+- Untuk Android: Unduh `AndalanTools.apk` langsung dari browser ponsel Anda, buka berkas tersebut, dan pilih Install.
 
 ### Metode 2: Kompilasi dari Source Code
 Prasyarat: Flutter SDK versi 3.24 atau yang lebih baru.
@@ -83,11 +81,14 @@ cd AndalanTools
 # Ambil dependensi proyek
 flutter pub get
 
-# Bangun berkas IPA unsigned untuk iOS
+# Bangun berkas IPA untuk iOS
 flutter build ios --release --no-codesign
+
+# Bangun berkas APK untuk Android
+flutter build apk --release
 ```
 
-Setiap push ke branch `main` juga secara otomatis memicu kompilasi di server macOS melalui alur kerja GitHub Actions (`.github/workflows/ios-build.yml`).
+Setiap push ke branch `main` secara otomatis memicu kompilasi multi-platform (iOS di runner macOS dan Android di runner Ubuntu) melalui alur kerja GitHub Actions (`.github/workflows/ios-build.yml`).
 
 ---
 

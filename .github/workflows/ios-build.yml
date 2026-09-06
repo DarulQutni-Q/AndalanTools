@@ -1,4 +1,4 @@
-name: Build iOS (IPA & Simulator)
+name: Build Multiplatform (iOS & Android)
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Build Unsigned IPA & Simulator Bundle
+  build-ios:
+    name: Build iOS (IPA & Simulator)
     runs-on: macos-14
     timeout-minutes: 45
 
@@ -20,7 +20,6 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-
 
       - name: Install dependencies
         run: flutter pub get
@@ -63,16 +62,41 @@ jobs:
           path: AndalanTools.ipa
           retention-days: 14
 
-      - name: Summary & Next Steps
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Android Release APK
+        run: flutter build apk --release
+
+      - name: Prepare APK Artifact
         run: |
-          echo "### 🚀 iOS Build Completed Successfully!" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "#### Cara Testing:" >> $GITHUB_STEP_SUMMARY
-          echo "1. **Di Laptop (Browser via Appetize.io):**" >> $GITHUB_STEP_SUMMARY
-          echo "   - Download artefak \`AndalanTools-simulator\`." >> $GITHUB_STEP_SUMMARY
-          echo "   - Buka [Appetize.io Upload](https://appetize.io/upload) dan upload file zip tersebut." >> $GITHUB_STEP_SUMMARY
-          echo "   - Nikmati simulasi iPhone interaktif langsung dari browser." >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "2. **Di iPhone Fisik (Sideloading):**" >> $GITHUB_STEP_SUMMARY
-          echo "   - Download artefak \`AndalanTools-ipa\`." >> $GITHUB_STEP_SUMMARY
-          echo "   - Sideload menggunakan SideStore, AltStore, atau Sideloadly." >> $GITHUB_STEP_SUMMARY
+          cp build/app/outputs/flutter-apk/app-release.apk AndalanTools.apk
+          ls -lh AndalanTools.apk
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AndalanTools-apk
+          path: AndalanTools.apk
+          retention-days: 14
