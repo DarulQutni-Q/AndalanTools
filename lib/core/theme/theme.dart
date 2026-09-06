@@ -3,22 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class AppTheme {
-  // Minimalist Monochromatic & Refined Swiss Palette
-  static const Color canvasColor = Color(0xFFFAFAFA);
+  // Minimalist Everforest & Swiss Palette
+  static const Color canvasColor = Color(0xFFFAF9F5);
   static const Color surfaceColor = Color(0xFFFFFFFF);
-  static const Color primaryAccent = Color(0xFF18181B); // Deep graphite
-  static const Color primaryText = Color(0xFF09090B); // Near-black
-  static const Color secondaryText = Color(0xFF71717A); // Zinc-500
-  static const Color dividerColor = Color(0xFFE4E4E7); // Zinc-200 subtle hairline
-  static const Color subtleFill = Color(0xFFF4F4F5); // Zinc-100 neutral container
+  static const Color primaryAccent = Color(0xFF2D4B3E); // Deep Everforest Evergreen
+  static const Color primaryText = Color(0xFF232A2E); // Deep Everforest Charcoal
+  static const Color secondaryText = Color(0xFF7A8478); // Soft Sage Gray
+  static const Color dividerColor = Color(0xFFE8EAE4); // Hairline Organic Border
+  static const Color subtleFill = Color(0xFFF2F4EE); // Soft Neutral Sage Squircle Fill
   
-  // Clean Functional Status Colors
-  static const Color successBg = Color(0xFFF4F4F5);
-  static const Color successText = Color(0xFF18181B);
-  static const Color activeBg = Color(0xFFF4F4F5);
-  static const Color activeText = Color(0xFF18181B);
-  static const Color warningBg = Color(0xFFF4F4F5);
-  static const Color warningText = Color(0xFF71717A);
+  // Everforest Organic Accents
+  static const Color accentSage = Color(0xFFA7C080);
+  static const Color accentAqua = Color(0xFF7FBBB3);
+  
+  // Clean Status Colors
+  static const Color successBg = Color(0xFFF2F4EE);
+  static const Color successText = Color(0xFF2D4B3E);
+  static const Color activeBg = Color(0xFFF2F4EE);
+  static const Color activeText = Color(0xFF232A2E);
+  static const Color warningBg = Color(0xFFFDF6E3);
+  static const Color warningText = Color(0xFF7A8478);
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -27,9 +31,9 @@ class AppTheme {
       primaryColor: primaryAccent,
       colorScheme: const ColorScheme.light(
         primary: primaryAccent,
-        secondary: Color(0xFF27272A),
+        secondary: Color(0xFF3D5A4C),
         surface: surfaceColor,
-        error: Color(0xFFEF4444),
+        error: Color(0xFFE67E80),
       ),
       dividerColor: dividerColor,
       fontFamily: '.SF Pro Display',

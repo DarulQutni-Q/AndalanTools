@@ -179,7 +179,7 @@ class IosSegmentedControl<T extends Object> extends StatelessWidget {
   }
 }
 
-/// Minimalist Swiss-style vector emblem for Andalan Tools
+/// Minimalist Swiss-style vector emblem: Two Layered Document Sheets with Optical Notch
 class AndalanLogo extends StatelessWidget {
   final double size;
   final Color? color;
@@ -209,60 +209,87 @@ class _AndalanLogoPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.085
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-
     final w = size.width;
     final h = size.height;
-    final fold = w * 0.32;
-    final r = w * 0.14;
+    final strokeWidth = (w * 0.085).clamp(1.5, 3.5);
+    final r = w * 0.10;
 
-    // Document outer contour with top-right dog-ear fold
-    final docPath = Path();
-    docPath.moveTo(r, 0);
-    docPath.lineTo(w - fold, 0);
-    docPath.lineTo(w, fold);
-    docPath.lineTo(w, h - r);
-    docPath.quadraticBezierTo(w, h, w - r, h);
-    docPath.lineTo(r, h);
-    docPath.quadraticBezierTo(0, h, 0, h - r);
-    docPath.lineTo(0, r);
-    docPath.quadraticBezierTo(0, 0, r, 0);
-    docPath.close();
-
-    canvas.drawPath(docPath, paint);
-
-    // Fold flap
-    final foldPath = Path();
-    foldPath.moveTo(w - fold, 0);
-    foldPath.lineTo(w - fold, fold);
-    foldPath.lineTo(w, fold);
-    canvas.drawPath(foldPath, paint);
-
-    // Minimalist geometric vault / shield core inside
-    final innerPaint = Paint()
-      ..color = color
+    // 1. Back Sheet (Offset to top-left)
+    final backPaint = Paint()
+      ..color = color.withOpacity(0.42)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.08
+      ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
 
-    final corePath = Path();
-    // Modern stylized geometric 'A' / shield chevron
-    corePath.moveTo(w * 0.32, h * 0.72);
-    corePath.lineTo(w * 0.50, h * 0.38);
-    corePath.lineTo(w * 0.68, h * 0.72);
-    canvas.drawPath(corePath, paint);
+    final backPath = Path();
+    // Top-left to bottom-left corner of back sheet
+    backPath.moveTo(w * 0.06 + r, h * 0.06);
+    backPath.lineTo(w * 0.72 - r, h * 0.06);
+    backPath.quadraticBezierTo(w * 0.72, h * 0.06, w * 0.72, h * 0.06 + r);
+    backPath.lineTo(w * 0.72, h * 0.22); // hides behind front sheet
 
-    // Horizontal cross-bar
+    // Left and bottom edges of back sheet
+    backPath.moveTo(w * 0.06, h * 0.06 + r);
+    backPath.lineTo(w * 0.06, h * 0.72 - r);
+    backPath.quadraticBezierTo(w * 0.06, h * 0.72, w * 0.06 + r, h * 0.72);
+    backPath.lineTo(w * 0.24, h * 0.72); // stops where front sheet starts
+
+    canvas.drawPath(backPath, backPaint);
+
+    // 2. Front Sheet (In foreground, offset to bottom-right)
+    final frontPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final x0 = w * 0.24;
+    final y0 = w * 0.24;
+    final x1 = w * 0.94;
+    final y1 = h * 0.94;
+    final notch = w * 0.24;
+
+    final frontPath = Path();
+    frontPath.moveTo(x0 + r, y0);
+    frontPath.lineTo(x1 - notch, y0);
+    // Optical diagonal cut for the notch
+    frontPath.lineTo(x1, y0 + notch);
+    frontPath.lineTo(x1, y1 - r);
+    frontPath.quadraticBezierTo(x1, y1, x1 - r, y1);
+    frontPath.lineTo(x0 + r, y1);
+    frontPath.quadraticBezierTo(x0, y1, x0, y1 - r);
+    frontPath.lineTo(x0, y0 + r);
+    frontPath.quadraticBezierTo(x0, y0, x0 + r, y0);
+    frontPath.close();
+
+    canvas.drawPath(frontPath, frontPaint);
+
+    // Optical Notch Flap fold line
+    final flapPath = Path();
+    flapPath.moveTo(x1 - notch, y0);
+    flapPath.lineTo(x1 - notch, y0 + notch);
+    flapPath.lineTo(x1, y0 + notch);
+    canvas.drawPath(flapPath, frontPaint);
+
+    // Minimal horizontal content lines inside front sheet
+    final linePaint = Paint()
+      ..color = color.withOpacity(0.55)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth * 0.85
+      ..strokeCap = StrokeCap.round;
+
     canvas.drawLine(
-      Offset(w * 0.38, h * 0.60),
-      Offset(w * 0.62, h * 0.60),
-      innerPaint,
+      Offset(x0 + w * 0.16, y0 + h * 0.38),
+      Offset(x1 - w * 0.16, y0 + h * 0.38),
+      linePaint,
+    );
+
+    canvas.drawLine(
+      Offset(x0 + w * 0.16, y0 + h * 0.52),
+      Offset(x1 - w * 0.28, y0 + h * 0.52),
+      linePaint,
     );
   }
 
@@ -270,4 +297,49 @@ class _AndalanLogoPainter extends CustomPainter {
   bool shouldRepaint(covariant _AndalanLogoPainter oldDelegate) =>
       oldDelegate.color != color;
 }
+
+/// Interactive Apple-style capsule pill for Header Vault access
+class IosHeaderVaultPill extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const IosHeaderVaultPill({
+    super.key,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IosBouncyCard(
+      onTap: onTap,
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+      borderRadius: BorderRadius.circular(20),
+      backgroundColor: AppTheme.subtleFill,
+      border: Border.all(color: AppTheme.dividerColor, width: 1),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x04000000),
+          blurRadius: 6,
+          offset: Offset(0, 1),
+        ),
+      ],
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.shield_outlined, size: 14.5, color: AppTheme.primaryText),
+          SizedBox(width: 5),
+          Text(
+            'Brankas',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: AppTheme.primaryText,
+              letterSpacing: -0.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 

@@ -7,6 +7,7 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:andalan_tools/core/theme/theme.dart';
+import 'package:andalan_tools/core/widgets/ios_widgets.dart';
 import 'package:andalan_tools/features/pdf_merger/presentation/pdf_merger_screen.dart';
 import 'package:andalan_tools/features/pdf_lock/presentation/pdf_lock_screen.dart';
 import 'package:andalan_tools/features/docx_converter/presentation/docx_converter_screen.dart';
@@ -156,6 +157,42 @@ void main() {
     expect(find.text('PDF'), findsOneWidget);
     expect(find.text('Gambar'), findsOneWidget);
     expect(find.text('Word'), findsOneWidget);
+  });
+
+  testWidgets('AndalanLogo and IosHeaderVaultPill render correctly and handle taps', (WidgetTester tester) async {
+    bool tapped = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.lightTheme,
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Row(
+              children: [
+                AndalanLogo(size: 24),
+                Text('Andalan'),
+              ],
+            ),
+            actions: [
+              IosHeaderVaultPill(
+                onTap: () {
+                  tapped = true;
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AndalanLogo), findsOneWidget);
+    expect(find.text('Andalan'), findsOneWidget);
+    expect(find.byType(IosHeaderVaultPill), findsOneWidget);
+    expect(find.text('Brankas'), findsOneWidget);
+
+    await tester.tap(find.text('Brankas'));
+    await tester.pumpAndSettle();
+    expect(tapped, isTrue);
   });
 }
 

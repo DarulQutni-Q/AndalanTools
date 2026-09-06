@@ -35,17 +35,17 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.shield_outlined, color: AppTheme.primaryText, size: 22),
-            tooltip: 'Brankas Dokumen',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const VaultScreen()),
-              );
-            },
+          Center(
+            child: IosHeaderVaultPill(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const VaultScreen()),
+                );
+              },
+            ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 16),
         ],
       ),
       body: SingleChildScrollView(
@@ -190,20 +190,6 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // 5. Brankas & Riwayat Dokumen
-            _buildInteractiveToolCard(
-              context,
-              title: 'Brankas & Riwayat',
-              subtitle: 'Simpan riwayat berkas lokal terproteksi Face ID / Biometrik.',
-              icon: Icons.shield_outlined,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const VaultScreen()),
-                );
-              },
-            ),
-            const SizedBox(height: 10),
 
             // 6. PDF Editor & OCR
             _buildInteractiveToolCard(
