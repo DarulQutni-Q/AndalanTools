@@ -209,13 +209,14 @@ class _CompressAndCleanScreenState extends State<CompressAndCleanScreen> {
               child: Column(
                 children: [
                   Container(
-                    width: 64,
-                    height: 64,
+                    width: 56,
+                    height: 56,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF6366F1).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
+                      color: AppTheme.subtleFill,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppTheme.dividerColor, width: 0.8),
                     ),
-                    child: const Icon(Icons.picture_as_pdf_rounded, size: 32, color: Color(0xFF6366F1)),
+                    child: const Icon(Icons.picture_as_pdf_outlined, size: 28, color: AppTheme.primaryText),
                   ),
                   const SizedBox(height: 16),
                   const Text(
@@ -237,12 +238,13 @@ class _CompressAndCleanScreenState extends State<CompressAndCleanScreen> {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEEF2FF),
-                      borderRadius: BorderRadius.circular(12),
+                      color: AppTheme.subtleFill,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppTheme.dividerColor, width: 0.8),
                     ),
-                    child: const Icon(Icons.description_rounded, color: Color(0xFF4F46E5), size: 28),
+                    child: const Icon(Icons.description_outlined, color: AppTheme.primaryText, size: 24),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -321,25 +323,32 @@ class _CompressAndCleanScreenState extends State<CompressAndCleanScreen> {
               Container(
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: AppTheme.successBg,
+                  color: AppTheme.surfaceColor,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppTheme.successText.withOpacity(0.2)),
+                  border: Border.all(color: AppTheme.dividerColor),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x04000000),
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.check_circle_rounded, color: AppTheme.successText, size: 26),
+                        const Icon(Icons.check_circle_outline_rounded, color: AppTheme.primaryText, size: 24),
                         const SizedBox(width: 10),
                         const Text(
-                          'Kompresi Berhasil!',
-                          style: TextStyle(color: AppTheme.successText, fontWeight: FontWeight.bold, fontSize: 16),
+                          'Kompresi Berhasil',
+                          style: TextStyle(color: AppTheme.primaryText, fontWeight: FontWeight.bold, fontSize: 15),
                         ),
                         const Spacer(),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppTheme.successText,
+                            color: AppTheme.primaryText,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -425,13 +434,14 @@ class _CompressAndCleanScreenState extends State<CompressAndCleanScreen> {
               child: Column(
                 children: [
                   Container(
-                    width: 64,
-                    height: 64,
+                    width: 56,
+                    height: 56,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
+                      color: AppTheme.subtleFill,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppTheme.dividerColor, width: 0.8),
                     ),
-                    child: const Icon(Icons.security_rounded, size: 32, color: Color(0xFF10B981)),
+                    child: const Icon(Icons.shield_outlined, size: 28, color: AppTheme.primaryText),
                   ),
                   const SizedBox(height: 16),
                   const Text(

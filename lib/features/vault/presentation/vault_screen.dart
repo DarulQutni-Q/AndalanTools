@@ -130,26 +130,12 @@ class _VaultScreenState extends State<VaultScreen> {
       case 'image':
       case 'jpg':
       case 'png':
-        return Icons.image_rounded;
+        return Icons.image_outlined;
       case 'docx':
       case 'doc':
-        return Icons.description_rounded;
+        return Icons.description_outlined;
       default:
-        return Icons.picture_as_pdf_rounded;
-    }
-  }
-
-  Color _getTypeColor(String type) {
-    switch (type.toLowerCase()) {
-      case 'image':
-      case 'jpg':
-      case 'png':
-        return const Color(0xFF0EA5E9);
-      case 'docx':
-      case 'doc':
-        return const Color(0xFF2563EB);
-      default:
-        return const Color(0xFFF43F5E);
+        return Icons.picture_as_pdf_outlined;
     }
   }
 
@@ -185,47 +171,36 @@ class _VaultScreenState extends State<VaultScreen> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
         child: IosGlassContainer(
-          padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 80,
-                height: 80,
+                width: 68,
+                height: 68,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF6366F1), Color(0xFF4F46E5)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF4F46E5).withOpacity(0.35),
-                      blurRadius: 18,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
+                  color: AppTheme.primaryText,
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Icon(Icons.lock_outline_rounded, size: 40, color: Colors.white),
+                child: const Icon(Icons.lock_outline_rounded, size: 30, color: Colors.white),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               const Text(
                 'Brankas Terkunci',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryText),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, letterSpacing: -0.3, color: AppTheme.primaryText),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               const Text(
                 'Autentikasi Face ID atau kata sandi diperlukan untuk melihat berkas privat Anda.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 13, color: AppTheme.secondaryText, height: 1.4),
+                style: TextStyle(fontSize: 12.5, color: AppTheme.secondaryText, height: 1.4),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: _promptAuthentication,
-                  icon: const Icon(Icons.fingerprint, size: 22),
+                  icon: const Icon(Icons.fingerprint, size: 20),
                   label: const Text('Buka dengan Face ID'),
                 ),
               ),
@@ -256,29 +231,29 @@ class _VaultScreenState extends State<VaultScreen> {
       children: [
         // Search bar & Filter Chips
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
           child: Column(
             children: [
               TextField(
                 onChanged: (val) => setState(() => _searchQuery = val),
                 decoration: InputDecoration(
                   hintText: 'Cari berkas di brankas...',
-                  hintStyle: const TextStyle(fontSize: 14, color: AppTheme.secondaryText),
-                  prefixIcon: const Icon(Icons.search_rounded, size: 20, color: AppTheme.secondaryText),
+                  hintStyle: const TextStyle(fontSize: 13.5, color: AppTheme.secondaryText),
+                  prefixIcon: const Icon(Icons.search_rounded, size: 18, color: AppTheme.secondaryText),
                   filled: true,
-                  fillColor: AppTheme.surfaceColor,
+                  fillColor: AppTheme.subtleFill,
                   contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: AppTheme.dividerColor, width: 1.2),
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: AppTheme.dividerColor, width: 1.2),
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
@@ -286,16 +261,20 @@ class _VaultScreenState extends State<VaultScreen> {
                   children: ['Semua', 'PDF', 'Gambar', 'Word'].map((f) {
                     final isSelected = _selectedFilter == f;
                     return Padding(
-                      padding: const EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.only(right: 6),
                       child: ChoiceChip(
                         label: Text(f),
                         selected: isSelected,
                         selectedColor: AppTheme.primaryAccent,
                         backgroundColor: AppTheme.surfaceColor,
+                        side: BorderSide(
+                          color: isSelected ? Colors.transparent : AppTheme.dividerColor,
+                          width: 1,
+                        ),
                         labelStyle: TextStyle(
                           color: isSelected ? Colors.white : AppTheme.primaryText,
                           fontWeight: FontWeight.w600,
-                          fontSize: 12.5,
+                          fontSize: 12,
                         ),
                         onSelected: (_) {
                           HapticFeedback.selectionClick();
@@ -349,7 +328,6 @@ class _VaultScreenState extends State<VaultScreen> {
                   itemCount: filtered.length,
                   itemBuilder: (context, index) {
                     final item = filtered[index];
-                    final typeColor = _getTypeColor(item.type);
                     final typeIcon = _getTypeIcon(item.type);
 
                     return Padding(
@@ -360,13 +338,14 @@ class _VaultScreenState extends State<VaultScreen> {
                         child: Row(
                           children: [
                             Container(
-                              width: 44,
-                              height: 44,
+                              width: 42,
+                              height: 42,
                               decoration: BoxDecoration(
-                                color: typeColor.withOpacity(0.12),
-                                borderRadius: BorderRadius.circular(12),
+                                color: AppTheme.subtleFill,
+                                borderRadius: BorderRadius.circular(11),
+                                border: Border.all(color: AppTheme.dividerColor.withOpacity(0.6), width: 0.8),
                               ),
-                              child: Icon(typeIcon, color: typeColor, size: 22),
+                              child: Icon(typeIcon, color: AppTheme.primaryText, size: 20),
                             ),
                             const SizedBox(width: 14),
                             Expanded(

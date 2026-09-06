@@ -18,33 +18,25 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.canvasColor,
       appBar: AppBar(
+        titleSpacing: 16,
         title: const Row(
           children: [
-            Text('Andalan Tools'),
-            SizedBox(width: 8),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: AppTheme.activeBg,
-                borderRadius: BorderRadius.all(Radius.circular(6)),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                child: Text(
-                  'PRO',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w800,
-                    color: AppTheme.primaryAccent,
-                    letterSpacing: 0.5,
-                  ),
-                ),
+            AndalanLogo(size: 24, color: AppTheme.primaryText),
+            SizedBox(width: 10),
+            Text(
+              'Andalan',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.4,
+                color: AppTheme.primaryText,
               ),
             ),
           ],
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.shield_outlined, color: AppTheme.primaryAccent),
+            icon: const Icon(Icons.shield_outlined, color: AppTheme.primaryText, size: 22),
             tooltip: 'Brankas Dokumen',
             onPressed: () {
               Navigator.push(
@@ -53,80 +45,65 @@ class HomeScreen extends StatelessWidget {
               );
             },
           ),
+          const SizedBox(width: 4),
         ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Privacy & Offline Status Hero Banner
+            // Minimalist Privacy Status Card (No neon dots, no AI clutter)
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(18),
+                color: AppTheme.surfaceColor,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppTheme.dividerColor, width: 1),
                 boxShadow: const [
                   BoxShadow(
-                    color: Color(0x1A000000),
-                    blurRadius: 14,
-                    offset: Offset(0, 4),
+                    color: Color(0x04000000),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
               child: Row(
                 children: [
                   Container(
-                    width: 44,
-                    height: 44,
+                    width: 36,
+                    height: 36,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(12),
+                      color: AppTheme.subtleFill,
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
-                      Icons.shield_outlined,
-                      color: Color(0xFF34D399),
-                      size: 24,
+                      Icons.lock_outline_rounded,
+                      size: 18,
+                      color: AppTheme.primaryText,
                     ),
                   ),
-                  const SizedBox(width: 14),
-                  Expanded(
+                  const SizedBox(width: 12),
+                  const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 7,
-                              height: 7,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF34D399),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            const Text(
-                              '100% OFFLINE & PRIVAT',
-                              style: TextStyle(
-                                color: Color(0xFF34D399),
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 3),
-                        const Text(
-                          'Semua file diproses langsung di HP tanpa upload ke cloud/server.',
+                        Text(
+                          'Pemrosesan Privat & Lokal',
                           style: TextStyle(
-                            color: Color(0xFF94A3B8),
-                            fontSize: 12.5,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.primaryText,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Semua berkas diproses di perangkat tanpa koneksi server.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.secondaryText,
                             height: 1.3,
                           ),
                         ),
@@ -136,37 +113,29 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Text(
-                  'Daftar Fitur',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryText,
-                  ),
+            const SizedBox(height: 20),
+
+            // Section Title
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 2),
+              child: Text(
+                'Alat Dokumen',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.secondaryText,
+                  letterSpacing: -0.2,
                 ),
-                const Spacer(),
-                Text(
-                  '8 Alat Tersedia',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+              ),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
 
             // 1. Image to PDF
             _buildInteractiveToolCard(
               context,
               title: 'Image to PDF',
-              subtitle: 'Scan berkas kamera, crop, kompres, dan gabungkan foto jadi dokumen PDF.',
-              tag: 'POPULER',
-              tagColor: const Color(0xFFF43F5E),
-              gradientColors: const [Color(0xFFFF5E62), Color(0xFFFF9966)],
-              icon: Icons.picture_as_pdf_rounded,
+              subtitle: 'Scan berkas kamera, crop, dan gabungkan foto jadi dokumen PDF.',
+              icon: Icons.picture_as_pdf_outlined,
               onTap: () {
                 Navigator.push(
                   context,
@@ -174,16 +143,13 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
 
             // 2. PDF Merger
             _buildInteractiveToolCard(
               context,
               title: 'PDF Merger',
-              subtitle: 'Satukan beberapa file dokumen PDF menjadi satu urutan yang rapi.',
-              tag: 'GABUNGKAN',
-              tagColor: const Color(0xFF6366F1),
-              gradientColors: const [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+              subtitle: 'Satukan beberapa file PDF menjadi satu dokumen tersusun.',
               icon: Icons.call_merge_rounded,
               onTap: () {
                 Navigator.push(
@@ -192,17 +158,14 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
 
             // 3. Lock & Protect PDF
             _buildInteractiveToolCard(
               context,
-              title: 'Lock & Protect PDF',
-              subtitle: 'Kunci & amankan PDF dengan enkripsi password AES 256-bit standar industri.',
-              tag: 'ENKRIPSI',
-              tagColor: const Color(0xFF059669),
-              gradientColors: const [Color(0xFF10B981), Color(0xFF059669)],
-              icon: Icons.lock_rounded,
+              title: 'Kunci & Proteksi PDF',
+              subtitle: 'Kunci PDF dengan enkripsi password AES 256-bit standar.',
+              icon: Icons.lock_outline_rounded,
               onTap: () {
                 Navigator.push(
                   context,
@@ -210,16 +173,13 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
 
-            // 4. Kompresi PDF & Bersih EXIF (BARU)
+            // 4. Kompresi PDF & Bersih EXIF
             _buildInteractiveToolCard(
               context,
               title: 'Kompres & Bersih EXIF',
-              subtitle: 'Kecilkan ukuran file PDF & hapus data lokasi GPS foto demi privasi.',
-              tag: 'HEMAT & PRIVASI',
-              tagColor: const Color(0xFF0284C7),
-              gradientColors: const [Color(0xFF0284C7), Color(0xFF06B6D4)],
+              subtitle: 'Kecilkan ukuran file PDF dan bersihkan metadata lokasi GPS foto.',
               icon: Icons.compress_rounded,
               onTap: () {
                 Navigator.push(
@@ -228,17 +188,14 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
 
-            // 5. Brankas & Riwayat Dokumen (BARU)
+            // 5. Brankas & Riwayat Dokumen
             _buildInteractiveToolCard(
               context,
               title: 'Brankas & Riwayat',
-              subtitle: 'Simpan riwayat berkas lokal terproteksi biometrik Face ID / Touch ID.',
-              tag: 'FACE ID',
-              tagColor: const Color(0xFF10B981),
-              gradientColors: const [Color(0xFF059669), Color(0xFF10B981)],
-              icon: Icons.shield_rounded,
+              subtitle: 'Simpan riwayat berkas lokal terproteksi Face ID / Biometrik.',
+              icon: Icons.shield_outlined,
               onTap: () {
                 Navigator.push(
                   context,
@@ -246,17 +203,14 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
 
             // 6. PDF Editor & OCR
             _buildInteractiveToolCard(
               context,
               title: 'PDF Editor & OCR',
-              subtitle: 'Ekstrak teks gambar, atur ulang urutan, serta hapus halaman PDF.',
-              tag: 'OCR & EDIT',
-              tagColor: const Color(0xFFD97706),
-              gradientColors: const [Color(0xFFF59E0B), Color(0xFFEA580C)],
-              icon: Icons.auto_stories_rounded,
+              subtitle: 'Ekstrak teks gambar, atur tata urutan, dan hapus halaman PDF.',
+              icon: Icons.auto_stories_outlined,
               onTap: () {
                 Navigator.push(
                   context,
@@ -264,16 +218,13 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
 
             // 7. Image Format Converter
             _buildInteractiveToolCard(
               context,
-              title: 'Image Format Converter',
+              title: 'Konversi Format Gambar',
               subtitle: 'Konversi format gambar instan antara PNG, JPG, WebP, dan HEIC.',
-              tag: 'MULTI-FORMAT',
-              tagColor: const Color(0xFF8B5CF6),
-              gradientColors: const [Color(0xFF8B5CF6), Color(0xFFA855F7)],
               icon: Icons.transform_rounded,
               onTap: () {
                 Navigator.push(
@@ -282,17 +233,14 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
 
-            // 8. Docx to PDF (Enhanced)
+            // 8. Docx to PDF
             _buildInteractiveToolCard(
               context,
               title: 'Docx to PDF',
               subtitle: 'Konversi naskah Word (.docx/.doc) dengan tabel & gambar ke PDF.',
-              tag: 'GAMBAR & TABEL',
-              tagColor: const Color(0xFF2563EB),
-              gradientColors: const [Color(0xFF2563EB), Color(0xFF3B82F6)],
-              icon: Icons.description_rounded,
+              icon: Icons.description_outlined,
               onTap: () {
                 Navigator.push(
                   context,
@@ -311,79 +259,54 @@ class HomeScreen extends StatelessWidget {
     BuildContext context, {
     required String title,
     required String subtitle,
-    required String tag,
-    required Color tagColor,
-    required List<Color> gradientColors,
     required IconData icon,
     required VoidCallback onTap,
   }) {
     return IosBouncyCard(
       onTap: onTap,
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      borderRadius: BorderRadius.circular(14),
+      backgroundColor: AppTheme.surfaceColor,
+      border: Border.all(color: AppTheme.dividerColor, width: 1),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x04000000),
+          blurRadius: 8,
+          offset: Offset(0, 2),
+        ),
+      ],
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Vibrant Gradient Icon Squircle
+          // Sleek Minimalist Icon Squircle
           Container(
-            width: 52,
-            height: 52,
+            width: 44,
+            height: 44,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: gradientColors,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: gradientColors.first.withOpacity(0.32),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              color: AppTheme.subtleFill,
+              borderRadius: BorderRadius.circular(11),
+              border: Border.all(color: AppTheme.dividerColor.withOpacity(0.6), width: 0.8),
             ),
-            child: Icon(icon, color: Colors.white, size: 26),
+            child: Icon(icon, color: AppTheme.primaryText, size: 22),
           ),
-          const SizedBox(width: 16),
-          // Text & Tag
+          const SizedBox(width: 14),
+          // Text
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.primaryText,
-                          letterSpacing: -0.3,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
-                      decoration: BoxDecoration(
-                        color: tagColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        tag,
-                        style: TextStyle(
-                          color: tagColor,
-                          fontSize: 9.5,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                    ),
-                  ],
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.primaryText,
+                    letterSpacing: -0.3,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 3),
                 Text(
                   subtitle,
                   style: const TextStyle(
@@ -397,21 +320,11 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 10),
-          // Arrow Action Pill
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: AppTheme.canvasColor,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppTheme.dividerColor, width: 1),
-            ),
-            child: const Icon(
-              Icons.chevron_right_rounded,
-              color: AppTheme.secondaryText,
-              size: 20,
-            ),
+          const SizedBox(width: 8),
+          const Icon(
+            Icons.chevron_right_rounded,
+            color: Color(0xFFA1A1AA),
+            size: 20,
           ),
         ],
       ),

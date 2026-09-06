@@ -161,8 +161,9 @@ class IosSegmentedControl<T extends Object> extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: const Color(0xFFE2E8F0).withOpacity(0.7),
+        color: const Color(0xFFF1F5F9),
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
       ),
       child: CupertinoSlidingSegmentedControl<T>(
         groupValue: groupValue,
@@ -177,3 +178,96 @@ class IosSegmentedControl<T extends Object> extends StatelessWidget {
     );
   }
 }
+
+/// Minimalist Swiss-style vector emblem for Andalan Tools
+class AndalanLogo extends StatelessWidget {
+  final double size;
+  final Color? color;
+
+  const AndalanLogo({
+    super.key,
+    this.size = 28,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final strokeColor = color ?? Theme.of(context).colorScheme.onSurface;
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(
+        painter: _AndalanLogoPainter(strokeColor),
+      ),
+    );
+  }
+}
+
+class _AndalanLogoPainter extends CustomPainter {
+  final Color color;
+  _AndalanLogoPainter(this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = size.width * 0.085
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final w = size.width;
+    final h = size.height;
+    final fold = w * 0.32;
+    final r = w * 0.14;
+
+    // Document outer contour with top-right dog-ear fold
+    final docPath = Path();
+    docPath.moveTo(r, 0);
+    docPath.lineTo(w - fold, 0);
+    docPath.lineTo(w, fold);
+    docPath.lineTo(w, h - r);
+    docPath.quadraticBezierTo(w, h, w - r, h);
+    docPath.lineTo(r, h);
+    docPath.quadraticBezierTo(0, h, 0, h - r);
+    docPath.lineTo(0, r);
+    docPath.quadraticBezierTo(0, 0, r, 0);
+    docPath.close();
+
+    canvas.drawPath(docPath, paint);
+
+    // Fold flap
+    final foldPath = Path();
+    foldPath.moveTo(w - fold, 0);
+    foldPath.lineTo(w - fold, fold);
+    foldPath.lineTo(w, fold);
+    canvas.drawPath(foldPath, paint);
+
+    // Minimalist geometric vault / shield core inside
+    final innerPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = size.width * 0.08
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final corePath = Path();
+    // Modern stylized geometric 'A' / shield chevron
+    corePath.moveTo(w * 0.32, h * 0.72);
+    corePath.lineTo(w * 0.50, h * 0.38);
+    corePath.lineTo(w * 0.68, h * 0.72);
+    canvas.drawPath(corePath, paint);
+
+    // Horizontal cross-bar
+    canvas.drawLine(
+      Offset(w * 0.38, h * 0.60),
+      Offset(w * 0.62, h * 0.60),
+      innerPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _AndalanLogoPainter oldDelegate) =>
+      oldDelegate.color != color;
+}
+
