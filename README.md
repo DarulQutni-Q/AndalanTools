@@ -1,6 +1,6 @@
 # Andalan Tools
 
-Aplikasi utilitas dokumen dan pengolahan berkas lokal untuk iOS. Dirancang dengan pendekatan offline-first, mengutamakan privasi penuh, kecepatan pemrosesan langsung di perangkat, dan estetika minimalis berbasis palet Everforest.
+Aplikasi utilitas dokumen dan pengolahan berkas lokal multi-platform (iOS, Android, Windows, macOS, Linux, Web) berbasis Flutter. Dirancang dengan pendekatan offline-first, mengutamakan privasi penuh, kecepatan pemrosesan langsung di perangkat, dan estetika minimalis berbasis palet Everforest.
 
 ---
 
